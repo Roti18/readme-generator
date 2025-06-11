@@ -27,7 +27,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="fixed top-4 right-4 z-50">
+          <div style={{ right: "415px" }} className="fixed top-4 z-50">
             <ThemeToggle />
           </div>
           {children}

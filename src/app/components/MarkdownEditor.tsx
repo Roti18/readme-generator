@@ -93,7 +93,11 @@ export default function MarkdownEditor() {
     setMarkdown(defaultMarkdown);
   };
 
-  const handleInsertMarkdown = (prefix, suffix = "", placeholder = "") => {
+  const handleInsertMarkdown = (
+    prefix: string,
+    suffix: string = "",
+    placeholder: string = ""
+  ) => {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
