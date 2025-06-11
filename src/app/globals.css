@@ -1,26 +1,181 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --border: 214.3 31.8% 91.4%;
+  /* Variabel tambahan untuk warna netral */
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --card: 0 0% 100%;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  /* Variabel tambahan untuk warna netral */
+  --muted-foreground: 217.2 32.6% 47.5%;
+  --card: 222.2 84% 4.9%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: hsl(var(--border));
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground));
+}
+
+/* === Markdown content styling (Optimized) === */
+.markdown-content {
+  max-width: none;
+  line-height: 1.75;
+  color: hsl(var(--foreground) / 0.9);
+}
+
+/* Judul (Headers) */
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+  font-weight: 700;
+  margin-top: 1.75rem;
+  margin-bottom: 1rem;
+  color: hsl(var(--foreground));
+}
+
+.markdown-content h1 {
+  font-size: 2rem;
+  border-bottom: 1px solid hsl(var(--border));
+  padding-bottom: 0.5rem;
+}
+.markdown-content h2 {
+  font-size: 1.5rem;
+  border-bottom: 1px solid hsl(var(--border));
+  padding-bottom: 0.4rem;
+}
+.markdown-content h3 {
+  font-size: 1.25rem;
+}
+.markdown-content h4 {
+  font-size: 1.125rem;
+}
+
+/* Paragraf dan Teks Dasar */
+.markdown-content p {
+  margin-bottom: 1rem;
+}
+.markdown-content strong {
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+.markdown-content em {
+  font-style: italic;
+}
+
+/* Daftar (Lists) */
+.markdown-content ul,
+.markdown-content ol {
+  margin-bottom: 1rem;
+  padding-left: 1.75rem;
+}
+.markdown-content ul {
+  list-style-type: disc;
+}
+.markdown-content ol {
+  list-style-type: decimal;
+}
+.markdown-content li {
+  margin-bottom: 0.5rem;
+}
+
+/* Blockquote */
+.markdown-content blockquote {
+  border-left: 4px solid hsl(var(--border));
+  padding-left: 1rem;
+  font-style: italic;
+  margin: 1.5rem 0;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Kode (Inline dan Blok) */
+.markdown-content code {
+  background-color: hsl(var(--border) / 0.5); /* Lebih subtle dari border */
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.375rem;
+  font-size: 0.875em; /* Relatif terhadap parent */
+  font-family: "Courier New", monospace;
+  color: hsl(var(--foreground) / 0.8);
+}
+.markdown-content pre {
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+.markdown-content pre code {
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  color: inherit; /* Mewarisi warna dari <pre> */
+}
+
+/* Link */
+.markdown-content a {
+  color: #2563eb; /* Warna brand biasanya tetap */
+  text-decoration: none;
+  font-weight: 500;
+}
+.dark .markdown-content a {
+  color: #60a5fa;
+}
+.markdown-content a:hover {
+  text-decoration: underline;
+}
+
+/* Tabel */
+.markdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  border: 1px solid hsl(var(--border));
+}
+.markdown-content th,
+.markdown-content td {
+  border: 1px solid hsl(var(--border));
+  padding: 0.75rem 1rem;
+}
+.markdown-content th {
+  background-color: hsl(var(--border) / 0.5);
+  font-weight: 600;
+}
+
+/* Garis Horizontal */
+.markdown-content hr {
+  border: none;
+  border-top: 1px solid hsl(var(--border));
+  margin: 2rem 0;
 }
