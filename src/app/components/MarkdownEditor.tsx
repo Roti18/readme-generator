@@ -157,8 +157,8 @@ export default function MarkdownEditor() {
       </div>
 
       {/* Formatting Toolbar */}
-      <div className="flex flex-wrap justify-between items-center gap-2 p-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-        <div>
+      <div className="flex md:flex-row flex-row items-center justify-between gap-4 p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 responsive-toolbar">
+        <div className="flex flex-wrap justify-center md:justify-start items-center gap-2">
           <button
             onClick={() => handleInsertMarkdown("## ", "", "Heading")}
             className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
@@ -204,8 +204,10 @@ export default function MarkdownEditor() {
             <Code className="h-5 w-5 text-gray-600 dark:text-gray-300" />
           </button>
         </div>
-        <div className="bg-gray-900 px-5 p-3 rounded-xl font-bold shadow-xl cursor-pointer hover:bg-gray-950 transition-colors duration-200 ease-in-out">
-          <a href="#">Gunakan AI?</a>
+        <div className="flex justify-center md:justify-end">
+          <div className="bg-gray-900 px-5 py-3 rounded-xl font-bold shadow-xl cursor-pointer hover:bg-gray-950 transition-colors duration-200 ease-in-out">
+            <a href="#">Gunakan AI?</a>
+          </div>
         </div>
       </div>
 

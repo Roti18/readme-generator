@@ -179,3 +179,12 @@ body {
   border-top: 1px solid hsl(var(--border));
   margin: 2rem 0;
 }
+
+@media (max-width: 650px) {
+  .responsive-toolbar {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 1rem !important;
+  }
+}
