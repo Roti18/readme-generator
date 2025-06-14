@@ -65,7 +65,6 @@ export default function MarkdownEditor() {
   const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Load from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem("markdown-content");
     if (saved) {
@@ -75,7 +74,6 @@ export default function MarkdownEditor() {
     }
   }, []);
 
-  // Save to localStorage when markdown changes
   useEffect(() => {
     if (markdown) {
       localStorage.setItem("markdown-content", markdown);
@@ -109,25 +107,21 @@ export default function MarkdownEditor() {
     let cursorPos;
 
     if (selectedText) {
-      // Jika ada teks yang dipilih, bungkus teks tersebut
       newText = `${markdown.substring(
         0,
         start
       )}${prefix}${selectedText}${suffix}${markdown.substring(end)}`;
       cursorPos = start + prefix.length + selectedText.length + suffix.length;
     } else {
-      // Jika tidak ada teks yang dipilih, sisipkan placeholder
       newText = `${markdown.substring(
         0,
         start
       )}${prefix}${placeholder}${suffix}${markdown.substring(start)}`;
-      // Posisikan kursor di dalam placeholder
       cursorPos = start + prefix.length;
     }
 
     setMarkdown(newText);
 
-    // Fokus kembali ke textarea dan setel posisi kursor setelah state diupdate
     setTimeout(() => {
       textarea.focus();
       textarea.setSelectionRange(cursorPos, cursorPos + placeholder.length);
@@ -163,49 +157,56 @@ export default function MarkdownEditor() {
       </div>
 
       {/* Formatting Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 p-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-        <button
-          onClick={() => handleInsertMarkdown("## ", "", "Heading")}
-          className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
-        >
-          <Heading2 className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-        </button>
-        <button
-          onClick={() => handleInsertMarkdown("**", "**", "bold text")}
-          className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
-        >
-          <Bold className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-        </button>
-        <button
-          onClick={() => handleInsertMarkdown("*", "*", "italic text")}
-          className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
-        >
-          <Italic className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-        </button>
-        <button
-          onClick={() => handleInsertMarkdown("> ", "", "Quote")}
-          className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
-        >
-          <MessageSquareQuote className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-        </button>
-        <button
-          onClick={() => handleInsertMarkdown("[", "](https://)", "link text")}
-          className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
-        >
-          <Link className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-        </button>
-        <button
-          onClick={() => handleInsertMarkdown("- ", "", "List item")}
-          className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
-        >
-          <List className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-        </button>
-        <button
-          onClick={() => handleInsertMarkdown("```\n", "\n```", "code")}
-          className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
-        >
-          <Code className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-        </button>
+      <div className="flex flex-wrap justify-between items-center gap-2 p-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+        <div>
+          <button
+            onClick={() => handleInsertMarkdown("## ", "", "Heading")}
+            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
+          >
+            <Heading2 className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+          </button>
+          <button
+            onClick={() => handleInsertMarkdown("**", "**", "bold text")}
+            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
+          >
+            <Bold className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+          </button>
+          <button
+            onClick={() => handleInsertMarkdown("*", "*", "italic text")}
+            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
+          >
+            <Italic className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+          </button>
+          <button
+            onClick={() => handleInsertMarkdown("> ", "", "Quote")}
+            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
+          >
+            <MessageSquareQuote className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+          </button>
+          <button
+            onClick={() =>
+              handleInsertMarkdown("[", "](https://)", "link text")
+            }
+            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
+          >
+            <Link className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+          </button>
+          <button
+            onClick={() => handleInsertMarkdown("- ", "", "List item")}
+            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
+          >
+            <List className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+          </button>
+          <button
+            onClick={() => handleInsertMarkdown("```\n", "\n```", "code")}
+            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
+          >
+            <Code className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+          </button>
+        </div>
+        <div className="bg-gray-900 px-5 p-3 rounded-xl font-bold shadow-xl cursor-pointer hover:bg-gray-950 transition-colors duration-200 ease-in-out">
+          <a href="#">Gunakan AI?</a>
+        </div>
       </div>
 
       {/* Mobile tabs */}
@@ -250,7 +251,7 @@ export default function MarkdownEditor() {
           </div>
 
           <textarea
-            ref={textareaRef} // Attach ref here
+            ref={textareaRef}
             value={markdown}
             onChange={(e) => setMarkdown(e.target.value)}
             placeholder="Start typing your markdown here..."
