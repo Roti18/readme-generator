@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import CopyButton from "./CopyButton";
@@ -13,6 +12,8 @@ import {
   Code,
   MessageSquareQuote,
   List,
+  Sparkles,
+  AlertCircle,
 } from "lucide-react";
 
 const defaultMarkdown = `# Welcome to Markdown Generator
@@ -37,24 +38,6 @@ function greet(name) {
 console.log(greet('World'));
 \`\`\`
 
-### Lists
-1. First item
-2. Second item
-   - Nested item
-   - Another nested item
-
-### Links and Images
-[Visit Google](https://google.com)
-
-### Blockquote
-> This is a blockquote. It can be used to highlight important information or quotes.
-
-### Table
-| Name | Age | City |
-|------|-----|------|
-| Alice | 25 | Jakarta |
-| Bob | 30 | Surabaya |
-
 ---
 
 **Start editing** the left panel to see your markdown come to life! 🚀
@@ -64,6 +47,9 @@ export default function MarkdownEditor() {
   const [markdown, setMarkdown] = useState("");
   const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem("markdown-content");
@@ -79,6 +65,39 @@ export default function MarkdownEditor() {
       localStorage.setItem("markdown-content", markdown);
     }
   }, [markdown]);
+
+  const handleAiSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!aiPrompt.trim()) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: aiPrompt }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Gagal menghasilkan konten.");
+      }
+
+      setMarkdown((prevMarkdown) => prevMarkdown + "\n\n" + data.markdown);
+      setAiPrompt("");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Terjadi kesalahan yang tidak diketahui.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleClearAll = () => {
     if (confirm("Are you sure you want to clear all content?")) {
@@ -138,7 +157,6 @@ export default function MarkdownEditor() {
             Markdown Generator
           </h1>
         </div>
-
         <div className="flex items-center gap-3">
           <CopyButton text={markdown} />
           <button
@@ -156,9 +174,9 @@ export default function MarkdownEditor() {
         </div>
       </div>
 
-      {/* Formatting Toolbar */}
-      <div className="flex md:flex-row flex-row items-center justify-between gap-4 p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 responsive-toolbar">
-        <div className="flex flex-wrap justify-center md:justify-start items-center gap-2">
+      <div className="flex md:flex-row flex-col items-center justify-between gap-4 p-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+        {/* Grup Kiri: Tombol Formatting */}
+        <div className="flex flex-wrap justify-center md:justify-start items-center gap-1">
           <button
             onClick={() => handleInsertMarkdown("## ", "", "Heading")}
             className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
@@ -204,10 +222,39 @@ export default function MarkdownEditor() {
             <Code className="h-5 w-5 text-gray-600 dark:text-gray-300" />
           </button>
         </div>
-        <div className="flex justify-center md:justify-end">
-          <div className="bg-gray-900 px-5 py-3 rounded-xl font-bold shadow-xl cursor-pointer hover:bg-gray-950 transition-colors duration-200 ease-in-out">
-            <a href="#">Gunakan AI?</a>
-          </div>
+
+        <div className="flex flex-col items-end">
+          <form
+            onSubmit={handleAiSubmit}
+            className="flex w-full max-w-md md:max-w-sm"
+          >
+            <input
+              type="text"
+              value={aiPrompt}
+              onChange={(e) => setAiPrompt(e.target.value)}
+              placeholder="Example Roti18/toefl-api"
+              className="w-full md:w-96 px-3 py-2 text-sm bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 border border-transparent rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={isLoading}
+            />
+            <button
+              type="submit"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-r-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+              disabled={!aiPrompt.trim() || isLoading}
+            >
+              {isLoading ? (
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+              ) : (
+                <Sparkles className="h-4 w-4" />
+              )}
+              <span>{isLoading ? "Loading..." : "Generate"}</span>
+            </button>
+          </form>
+          {error && (
+            <div className="mt-2 flex items-center gap-2 text-sm text-red-500">
+              <AlertCircle className="h-4 w-4" />
+              <span>{error}</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -221,8 +268,7 @@ export default function MarkdownEditor() {
               : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
           }`}
         >
-          <FileText className="h-4 w-4" />
-          Edit
+          <FileText className="h-4 w-4" /> Edit
         </button>
         <button
           onClick={() => setActiveTab("preview")}
@@ -232,17 +278,14 @@ export default function MarkdownEditor() {
               : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
           }`}
         >
-          <Eye className="h-4 w-4" />
-          Preview
+          <Eye className="h-4 w-4" /> Preview
         </button>
       </div>
 
-      {/* Main content */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Editor Panel */}
         <div
           className={`w-full md:w-1/2 flex flex-col border-r border-gray-200 dark:border-gray-700 ${
-            activeTab === "preview" ? "hidden md:flex" : ""
+            activeTab === "preview" && "hidden md:flex"
           }`}
         >
           <div className="hidden md:flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
@@ -251,7 +294,6 @@ export default function MarkdownEditor() {
               Markdown Editor
             </span>
           </div>
-
           <textarea
             ref={textareaRef}
             value={markdown}
@@ -262,10 +304,9 @@ export default function MarkdownEditor() {
           />
         </div>
 
-        {/* Preview Panel */}
         <div
           className={`w-full md:w-1/2 flex flex-col ${
-            activeTab === "edit" ? "hidden md:flex" : ""
+            activeTab === "edit" && "hidden md:flex"
           }`}
         >
           <div className="hidden md:flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
@@ -274,12 +315,11 @@ export default function MarkdownEditor() {
               Preview
             </span>
           </div>
-
           <div className="flex-1 overflow-auto p-4 bg-white dark:bg-gray-900">
             {markdown.trim() ? (
-              <div className="markdown-content">
+              <article className="prose dark:prose-invert max-w-none">
                 <ReactMarkdown>{markdown}</ReactMarkdown>
-              </div>
+              </article>
             ) : (
               <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
                 <div className="text-center">
