@@ -6,62 +6,53 @@ import { ThemeProvider } from "@/app/providers/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://markdown-generator-seven.vercel.app/"),
+const productionUrl = "https://readme-ai-generator.vercel.app/";
 
-  title: "AI README Generator for GitHub - Create Markdown Instantly",
+export const metadata: Metadata = {
+  metadataBase: new URL(productionUrl),
+
+  title: "AI README Generator for GitHub | Create README.md Instantly",
   description:
-    "Buat README.md profesional dengan AI hanya dengan memasukkan username GitHub atau nama repository. Markdown generator kami menyediakan live preview, dark mode, dan hasil siap pakai.",
+    "Generate professional GitHub README.md files in seconds with our AI-powered markdown editor. Simply provide a repository URL to get a well-structured, ready-to-use README.",
 
   keywords:
-    "github readme generator, ai readme generator, markdown readme github, create readme.md online, github markdown editor, ai markdown generator, github profile readme",
+    "ai readme generator, github readme generator, markdown generator, create readme.md, automatic readme, github profile readme, professional readme",
 
   icons: {
-    icon: "/file.svg",
+    icon: "/favicon.ico",
   },
 
   openGraph: {
     title: "AI README Generator for GitHub",
     description:
-      "Cukup masukkan username GitHub atau nama repo, dan AI kami akan membuatkan README.md profesional untuk Anda.",
-    type: "website",
-    locale: "id_ID",
-    url: "https://markdown-generator-seven.vercel.app/",
-    siteName: "AI GitHub README Generator",
+      "Instantly create professional README.md files for your GitHub repositories using AI.",
+    url: productionUrl,
+    siteName: "AI README Generator",
     images: [
       {
-        url: "/file.svg",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "AI GitHub README Generator",
+        alt: "AI README Generator for GitHub",
       },
     ],
+    locale: "en_US",
+    type: "website",
   },
-
   twitter: {
     card: "summary_large_image",
-    title: "Generate README.md with AI from GitHub Username or Repo",
+    title: "AI README Generator for GitHub",
     description:
-      "Buat README GitHub secara otomatis menggunakan AI. Masukkan username atau nama repo, dan lihat hasilnya.",
-    images: ["/file.svg"],
+      "Instantly create professional README.md files for your GitHub repositories using AI.",
+    images: ["/og-image.png"],
   },
 
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-    },
   },
-
   alternates: {
-    canonical:
-      "https://markdown-generator-git-main-rs-projects-7a5f8bd9.vercel.app/",
-    languages: {
-      "id-ID":
-        "https://markdown-generator-jh1wtdt20-rs-projects-7a5f8bd9.vercel.app/",
-    },
+    canonical: "/",
   },
 };
 
