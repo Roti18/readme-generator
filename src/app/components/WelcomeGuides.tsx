@@ -61,7 +61,6 @@ export default function WelcomeGuide() {
                   </div>
                 </div>
 
-                {/* === BAGIAN YANG HILANG, SEKARANG SUDAH DIKEMBALIKAN === */}
                 <div className="mt-8 text-left space-y-4">
                   <div className="flex items-start gap-4">
                     <div className="flex-shrink-0 mt-1 h-5 w-5 flex items-center justify-center rounded-full bg-gray-200 dark:bg-zinc-800 text-xs font-bold text-gray-600 dark:text-gray-300">
@@ -100,7 +99,6 @@ export default function WelcomeGuide() {
                     </p>
                   </div>
                 </div>
-                {/* === BATAS AKHIR BAGIAN YANG HILANG === */}
 
                 <div className="mt-8 flex justify-center">
                   <button

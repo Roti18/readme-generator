@@ -71,10 +71,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // 2. Tambahkan suppressHydrationWarning pada tag <html>
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        {/* 3. Bungkus {children} dengan ThemeProvider */}
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

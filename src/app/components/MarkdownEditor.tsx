@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import CopyButton from "./CopyButton";
 import WelcomeGuide from "./WelcomeGuides";
+import { ThemeSwitcher } from "./ThemeSwitcher";
 import {
   FileText,
   Eye,
@@ -71,6 +72,7 @@ export default function MarkdownEditor() {
     e.preventDefault();
     if (!aiPrompt.trim()) return;
 
+    setMarkdown("");
     setIsLoading(true);
     setError(null);
 
@@ -87,7 +89,7 @@ export default function MarkdownEditor() {
         throw new Error(data.error || "Gagal menghasilkan konten.");
       }
 
-      setMarkdown((prevMarkdown) => prevMarkdown + "\n\n" + data.markdown);
+      setMarkdown(data.markdown);
       setAiPrompt("");
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -149,10 +151,10 @@ export default function MarkdownEditor() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-white dark:bg-zinc-900">
+    <div className="flex flex-col h-screen">
       <WelcomeGuide />
 
-      <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-4 p-4 border-b border-gray-200 dark:border-zinc-800">
+      <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-4 p-4 border-b dark:border-zinc-800">
         <div className="flex items-center gap-3">
           <FileText className="h-6 w-6 text-blue-600" />
           <h1 className="text-xl font-bold">Markdown Generator</h1>
@@ -171,6 +173,8 @@ export default function MarkdownEditor() {
           >
             Clear All
           </button>
+          <div className="border-l h-6 dark:border-zinc-700"></div>
+          <ThemeSwitcher />
         </div>
       </div>
 
@@ -293,7 +297,7 @@ export default function MarkdownEditor() {
             value={markdown}
             onChange={(e) => setMarkdown(e.target.value)}
             placeholder="Start typing your markdown here..."
-            className="flex-1 p-4 bg-white dark:bg-zinc-900 resize-none focus:outline-none font-mono text-sm leading-relaxed"
+            className="flex-1 p-4 bg-transparent resize-none focus:outline-none font-mono text-sm leading-relaxed"
             spellCheck={false}
           />
         </div>
@@ -308,7 +312,7 @@ export default function MarkdownEditor() {
               Preview
             </span>
           </div>
-          <div className="flex-1 overflow-auto p-4 bg-white dark:bg-zinc-900">
+          <div className="flex-1 overflow-auto p-4 bg-transparent">
             {markdown.trim() ? (
               <div className="markdown-content">
                 <ReactMarkdown>{markdown}</ReactMarkdown>
