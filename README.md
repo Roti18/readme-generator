@@ -2,7 +2,7 @@
 
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextjs&logoColor=white) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 
-Markdown Generator — Editor markdown dengan live preview.
+Readme Generator — Editor markdown dengan live preview.
 
 ## ✨ Fitur Utama
 - **Live Preview:**  Edit markdown secara real-time dan lihat hasilnya secara langsung.
@@ -36,8 +36,8 @@ Markdown Generator — Editor markdown dengan live preview.
 ## 🛠️ Cara Menjalankan Secara Lokal
 1. **Clone repository ini:**
    ```bash
-   git clone https://github.com/Roti18/markdown-generator
-   cd markdown-generator
+   git clone https://github.com/Roti18/readme-generator
+   cd readme-generator
    ```
 2. **Install semua dependency:**
    ```bash
