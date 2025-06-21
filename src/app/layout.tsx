@@ -1,8 +1,8 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "./providers/ThemeProvider";
-import ThemeToggle from "./components/ThemeToggle";
+
+import { ThemeProvider } from "@/app/providers/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -64,23 +64,23 @@ export const metadata: Metadata = {
     },
   },
 };
+
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html lang="id" suppressHydrationWarning>
+    // 2. Tambahkan suppressHydrationWarning pada tag <html>
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
+        {/* 3. Bungkus {children} dengan ThemeProvider */}
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <div style={{ right: "415px" }} className="fixed top-4 z-50">
-            <ThemeToggle />
-          </div>
           {children}
         </ThemeProvider>
       </body>

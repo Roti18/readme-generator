@@ -149,96 +149,91 @@ export default function MarkdownEditor() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-white dark:bg-gray-900">
+    <div className="flex flex-col h-screen bg-white dark:bg-zinc-900">
       <WelcomeGuide />
-      <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-4 p-4 border-b border-gray-200 dark:border-gray-700">
+
+      <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-4 p-4 border-b border-gray-200 dark:border-zinc-800">
         <div className="flex items-center gap-3">
           <FileText className="h-6 w-6 text-blue-600" />
-          <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-            Markdown Generator
-          </h1>
+          <h1 className="text-xl font-bold">Markdown Generator</h1>
         </div>
         <div className="flex items-center gap-3">
           <CopyButton text={markdown} />
           <button
             onClick={handleResetDemo}
-            className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
+            className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 rounded-lg transition-colors"
           >
             Reset Demo
           </button>
           <button
             onClick={handleClearAll}
-            className="px-3 py-2 text-sm bg-red-100 hover:bg-red-200 dark:bg-red-900 dark:hover:bg-red-800 text-red-700 dark:text-red-300 rounded-lg transition-colors"
+            className="px-3 py-2 text-sm font-medium bg-red-100 dark:bg-red-900/40 hover:bg-red-200 dark:hover:bg-red-900/60 text-red-600 dark:text-red-400 rounded-lg transition-colors"
           >
             Clear All
           </button>
         </div>
       </div>
 
-      <div className="flex md:flex-row flex-col items-center justify-between gap-4 p-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+      <div className="flex md:flex-row flex-col items-center justify-between gap-4 p-2 border-b dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900/50">
         <div className="flex flex-wrap justify-center md:justify-start items-center gap-1">
           <button
             onClick={() => handleInsertMarkdown("## ", "", "Heading")}
-            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
+            className="p-2 hover:bg-gray-200 dark:hover:bg-zinc-800 rounded-md"
           >
-            <Heading2 className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            <Heading2 className="h-5 w-5 text-gray-600 dark:text-gray-400" />
           </button>
           <button
             onClick={() => handleInsertMarkdown("**", "**", "bold text")}
-            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
+            className="p-2 hover:bg-gray-200 dark:hover:bg-zinc-800 rounded-md"
           >
-            <Bold className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            <Bold className="h-5 w-5 text-gray-600 dark:text-gray-400" />
           </button>
           <button
             onClick={() => handleInsertMarkdown("*", "*", "italic text")}
-            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
+            className="p-2 hover:bg-gray-200 dark:hover:bg-zinc-800 rounded-md"
           >
-            <Italic className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            <Italic className="h-5 w-5 text-gray-600 dark:text-gray-400" />
           </button>
           <button
             onClick={() => handleInsertMarkdown("> ", "", "Quote")}
-            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
+            className="p-2 hover:bg-gray-200 dark:hover:bg-zinc-800 rounded-md"
           >
-            <MessageSquareQuote className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            <MessageSquareQuote className="h-5 w-5 text-gray-600 dark:text-gray-400" />
           </button>
           <button
             onClick={() =>
               handleInsertMarkdown("[", "](https://)", "link text")
             }
-            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
+            className="p-2 hover:bg-gray-200 dark:hover:bg-zinc-800 rounded-md"
           >
-            <Link className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            <Link className="h-5 w-5 text-gray-600 dark:text-gray-400" />
           </button>
           <button
             onClick={() => handleInsertMarkdown("- ", "", "List item")}
-            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
+            className="p-2 hover:bg-gray-200 dark:hover:bg-zinc-800 rounded-md"
           >
-            <List className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            <List className="h-5 w-5 text-gray-600 dark:text-gray-400" />
           </button>
           <button
             onClick={() => handleInsertMarkdown("```\n", "\n```", "code")}
-            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md"
+            className="p-2 hover:bg-gray-200 dark:hover:bg-zinc-800 rounded-md"
           >
-            <Code className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            <Code className="h-5 w-5 text-gray-600 dark:text-gray-400" />
           </button>
         </div>
-
         <div className="flex flex-col items-end">
-          <form
-            onSubmit={handleAiSubmit}
-            className="flex w-full max-w-md md:max-w-sm"
-          >
+          <form onSubmit={handleAiSubmit} className="flex w-full">
             <input
               type="text"
+              placeholder="Analisis repo..."
+              className="w-full md:w-96 px-3 py-2 text-sm bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={isLoading}
               value={aiPrompt}
               onChange={(e) => setAiPrompt(e.target.value)}
-              placeholder="Example Roti18/toefl-api"
-              className="w-full md:w-96 px-3 py-2 text-sm bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 border border-transparent rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              disabled={isLoading}
             />
             <button
               type="submit"
-              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-r-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-gray-900 text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200 rounded-r-md transition-colors disabled:opacity-50"
               disabled={!aiPrompt.trim() || isLoading}
             >
               {isLoading ? (
@@ -258,13 +253,13 @@ export default function MarkdownEditor() {
         </div>
       </div>
 
-      <div className="md:hidden flex border-b border-gray-200 dark:border-gray-700">
+      <div className="md:hidden flex border-b dark:border-zinc-800">
         <button
           onClick={() => setActiveTab("edit")}
           className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
             activeTab === "edit"
-              ? "text-blue-600 border-b-2 border-blue-600"
-              : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+              ? "text-blue-600 border-b-2 border-blue-500"
+              : "text-gray-500 dark:text-gray-400"
           }`}
         >
           <FileText className="h-4 w-4" /> Edit
@@ -273,8 +268,8 @@ export default function MarkdownEditor() {
           onClick={() => setActiveTab("preview")}
           className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
             activeTab === "preview"
-              ? "text-blue-600 border-b-2 border-blue-600"
-              : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+              ? "text-blue-600 border-b-2 border-blue-500"
+              : "text-gray-500 dark:text-gray-400"
           }`}
         >
           <Eye className="h-4 w-4" /> Preview
@@ -283,14 +278,14 @@ export default function MarkdownEditor() {
 
       <div className="flex-1 flex overflow-hidden">
         <div
-          className={`w-full md:w-1/2 flex flex-col border-r border-gray-200 dark:border-gray-700 ${
+          className={`w-full md:w-1/2 flex flex-col border-r dark:border-zinc-800 ${
             activeTab === "preview" && "hidden md:flex"
           }`}
         >
-          <div className="hidden md:flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-            <FileText className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+          <div className="hidden md:flex items-center gap-2 p-3 bg-gray-50 dark:bg-zinc-900/50 border-b dark:border-zinc-800">
+            <FileText className="h-4 w-4 text-gray-500" />
             <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
-              Markdown Editor
+              Editor
             </span>
           </div>
           <textarea
@@ -298,27 +293,26 @@ export default function MarkdownEditor() {
             value={markdown}
             onChange={(e) => setMarkdown(e.target.value)}
             placeholder="Start typing your markdown here..."
-            className="flex-1 p-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 resize-none focus:outline-none font-mono text-sm leading-relaxed"
+            className="flex-1 p-4 bg-white dark:bg-zinc-900 resize-none focus:outline-none font-mono text-sm leading-relaxed"
             spellCheck={false}
           />
         </div>
-
         <div
           className={`w-full md:w-1/2 flex flex-col ${
             activeTab === "edit" && "hidden md:flex"
           }`}
         >
-          <div className="hidden md:flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-            <Eye className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+          <div className="hidden md:flex items-center gap-2 p-3 bg-gray-50 dark:bg-zinc-900/50 border-b dark:border-zinc-800">
+            <Eye className="h-4 w-4 text-gray-500" />
             <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
               Preview
             </span>
           </div>
-          <div className="flex-1 overflow-auto p-4 bg-white dark:bg-gray-900">
+          <div className="flex-1 overflow-auto p-4 bg-white dark:bg-zinc-900">
             {markdown.trim() ? (
-              <article className="prose dark:prose-invert max-w-none">
+              <div className="markdown-content">
                 <ReactMarkdown>{markdown}</ReactMarkdown>
-              </article>
+              </div>
             ) : (
               <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
                 <div className="text-center">
