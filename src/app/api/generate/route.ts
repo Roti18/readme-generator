@@ -10,35 +10,57 @@ function extractRepoName(prompt: string): string | null {
   return match ? match[1] : null;
 }
 
-function getTechStack(language: string | null, fileList: string[]): string {
+function formatRepoNameToTitle(repoName: string): string {
+  return repoName
+    .split(/[-_]/)
+    .map((word) => {
+      if (word.length <= 3) {
+        return word.toUpperCase();
+      }
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join(" ");
+}
+
+function getTechStack(
+  language: string | null,
+  fileList: string[],
+  dependencies: object,
+  devDependencies: object
+): string {
   const icons: Set<string> = new Set();
-  const lang = language ? language.toLowerCase() : "";
-  const files = fileList.map((f) => f.toLowerCase());
+  const allDeps = { ...dependencies, ...devDependencies };
 
-  if (files.includes("next.config.js") || files.includes("next.config.ts"))
-    icons.add("⚡ Next.js");
-  if (files.includes("astro.config.mjs")) icons.add("🌠 Astro");
-  if (files.includes("vite.config.js") || files.includes("vite.config.ts"))
-    icons.add("⚡ Vite");
-  if (files.includes("remix.config.js")) icons.add("💿 Remix");
-  if (
-    files.includes("tailwind.config.js") ||
-    files.includes("tailwind.config.ts")
-  )
-    icons.add("💨 Tailwind CSS");
-
-  if (lang.includes("javascript")) icons.add("🟨 JavaScript");
-  if (lang.includes("typescript")) icons.add("🟦 TypeScript");
-  if (lang.includes("python")) icons.add("🐍 Python");
-  if (lang.includes("go")) icons.add("🐹 Go");
-  if (lang.includes("java")) icons.add("☕ Java");
-  if (lang.includes("rust")) icons.add("🦀 Rust");
-
-  if (files.includes("package.json") && !icons.has("⚡ Next.js"))
-    icons.add("📦 Node.js");
-  if (files.includes("dockerfile")) icons.add("🐳 Docker");
+  if ("next" in allDeps) icons.add("Next.js");
+  if ("react" in allDeps) icons.add("React");
+  if ("express" in allDeps) icons.add("Express.js");
+  if ("tailwindcss" in allDeps) icons.add("Tailwind CSS");
+  if ("typescript" in allDeps) icons.add("TypeScript");
+  if (language?.toLowerCase() === "javascript" && !icons.has("React"))
+    icons.add("Node.js");
 
   return icons.size > 0 ? Array.from(icons).join(" · ") : "Tidak terdeteksi.";
+}
+
+function detectPackageManager(files: string[]): {
+  installCmd: string;
+  runCmd: string;
+  name: string;
+} {
+  const lowercasedFiles = files.map((f) => f.toLowerCase());
+  if (lowercasedFiles.includes("yarn.lock")) {
+    return { installCmd: "yarn install", runCmd: "yarn dev", name: "Yarn" };
+  }
+  if (lowercasedFiles.includes("pnpm-lock.yaml")) {
+    return { installCmd: "pnpm install", runCmd: "pnpm dev", name: "PNPM" };
+  }
+  if (lowercasedFiles.includes("bun.lockb")) {
+    return { installCmd: "bun install", runCmd: "bun dev", name: "Bun" };
+  }
+  if (lowercasedFiles.includes("package.json")) {
+    return { installCmd: "npm install", runCmd: "npm run dev", name: "NPM" };
+  }
+  return { installCmd: "N/A", runCmd: "N/A", name: "Tidak diketahui" };
 }
 
 export async function POST(request: Request) {
@@ -54,62 +76,145 @@ export async function POST(request: Request) {
     const repoName = extractRepoName(prompt);
     if (!repoName) {
       return NextResponse.json(
-        {
-          error:
-            "Nama repositori dengan format 'user/repo' tidak ditemukan dalam prompt.",
-        },
+        { error: "Format 'user/repo' tidak ditemukan." },
         { status: 400 }
       );
     }
 
-    const [githubRes, contentsRes] = await Promise.all([
+    const GITHUB_API_HEADERS = {
+      Authorization: `token ${process.env.GITHUB_TOKEN}`,
+    };
+    const [repoRes, rootContentsRes] = await Promise.all([
       fetch(`https://api.github.com/repos/${repoName}`, {
-        headers: { Authorization: `token ${process.env.GITHUB_TOKEN}` },
+        headers: GITHUB_API_HEADERS,
       }),
       fetch(`https://api.github.com/repos/${repoName}/contents/`, {
-        headers: { Authorization: `token ${process.env.GITHUB_TOKEN}` },
+        headers: GITHUB_API_HEADERS,
       }),
     ]);
 
-    if (!githubRes.ok) {
+    if (!repoRes.ok) {
       return NextResponse.json(
         { error: `Repo '${repoName}' tidak ditemukan.` },
         { status: 404 }
       );
     }
-    const repoData = await githubRes.json();
 
-    let fileList: string[] = [];
-    if (contentsRes.ok) {
-      const contentsData = await contentsRes.json();
-      fileList = contentsData.map((item: { name: string }) => item.name);
+    const repoData = await repoRes.json();
+    const rootContents = rootContentsRes.ok ? await rootContentsRes.json() : [];
+    const fileList = rootContents.map((item: { name: string }) => item.name);
+
+    let dependencies = {},
+      devDependencies = {};
+    const packageJsonFile = rootContents.find(
+      (item: { name: string }) => item.name === "package.json"
+    );
+    if (packageJsonFile) {
+      const packageJsonRes = await fetch(packageJsonFile.url, {
+        headers: GITHUB_API_HEADERS,
+      });
+      if (packageJsonRes.ok) {
+        const packageData = await packageJsonRes.json();
+        const content = Buffer.from(packageData.content, "base64").toString(
+          "utf-8"
+        );
+        const parsedContent = JSON.parse(content);
+        dependencies = parsedContent.dependencies || {};
+        devDependencies = parsedContent.devDependencies || {};
+      }
     }
 
-    const techStack = getTechStack(repoData.language, fileList);
+    const formattedTitle = formatRepoNameToTitle(repoData.name);
+    const techStack = getTechStack(
+      repoData.language,
+      fileList,
+      dependencies,
+      devDependencies
+    );
+    const pm = detectPackageManager(fileList);
 
     const detailedPrompt = `
-      Anda adalah asisten AI pemrograman senior yang sangat membantu dan ahli dalam analisis kode.
-      Gunakan informasi konteks di bawah ini untuk menjawab permintaan pengguna dengan akurat dan mendalam.
+      [ROLE & PERSONA]
+      You are "Genesis", a world-class Senior Technical Writer at Vercel. You are an expert in creating clear, compelling, and aesthetically pleasing README.md files. Your documentation is the gold standard.
 
-      == KONTEKS DARI REPOSITORI GITHUB ==
-      - Nama Repo: ${repoData.name}
-      - Deskripsi: ${repoData.description || "Tidak ada deskripsi."}
-      - Bahasa Utama: ${repoData.language || "Tidak terdeteksi."}
-      - Bintang: ${repoData.stargazers_count}
-      - Tech Stack Terdeteksi: ${techStack}
-      - Daftar File & Folder di Root: ${
-        fileList.length > 0
-          ? `\n  - ` + fileList.join("\n  - ")
-          : "Tidak tersedia."
-      }
+      [GOLD STANDARD EXAMPLE - YOUR TARGET]
+      Below is a perfect example of a README.md you have written before. Study its structure, tone, use of emojis, and clarity. Your generated output MUST match this level of quality.
 
-      == PERMINTAAN PENGGUNA ==
+      \`\`\`markdown
+      # API Latihan TOEFL
+
+      ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white) ![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+
+      REST API sederhana yang menyediakan soal-soal latihan TOEFL...
+
+      **Dokumentasi Live bisa diakses di:** [https://toefl-api.vercel.app/document](https://toefl-api.vercel.app/document)
+
+      ## ✨ Fitur Utama
+      - **Data Soal Lengkap**: ...
+      - **Endpoint Fleksibel**: ...
+      - **Perhitungan Skor Otomatis**: ...
+
+      ## 💻 Teknologi yang Digunakan
+      - **Backend**: Node.js, Express.js
+      - **Data**: JSON statis
+
+      ## 📂 Struktur Proyek
+      \`\`\`
+      /
+      ├── public/
+      │   └── index.html
+      ├── data/
+      │   └── soal.json
+      ├── index.js
+      └── package.json
+      \`\`\`
+
+      ## 🛠️ Cara Menjalankan Secara Lokal
+      1.  **Clone repository ini:**
+          \`\`\`bash
+          git clone https://github.com/Roti18/toefl-api
+          cd toefl-api
+          \`\`\`
+      2.  **Install semua dependency:**
+          \`\`\`bash
+          npm install
+          \`\`\`
+      3.  **Jalankan server development:**
+          \`\`\`bash
+          npm run dev
+          \`\`\`
+      \`\`\`
+      --- End of Example ---
+
+      [PROJECT CONTEXT TO DOCUMENT]
+      - Formatted Title: ${formattedTitle}
+      - Repository Name: ${repoData.full_name}
+      - Description: ${repoData.description || "No description provided."}
+      - Detected Tech Stack: ${techStack}
+      - Detected Package Manager: ${pm.name}
+      - Installation Command: ${pm.installCmd}
+      - Run Command: ${pm.runCmd}
+      - File Structure: ${fileList.join(", ")}
+
+      [PRIMARY TASK]
+      Based on the user's prompt below, perform ONE of the following:
+
+      1.  **IF the prompt is general** (e.g., just the repo name, "create README"):
+          Your main mission is to generate a **complete, professional README.md** for the provided project context.
+          - **MANDATORY**: Emulate the structure and style of the "GOLD STANDARD EXAMPLE".
+          - Use the "Formatted Title" as the main H1 header.
+          - Create relevant sections like "✨ Fitur Utama", "💻 Teknologi yang Digunakan", "📂 Struktur Proyek", and "🛠️ Cara Menjalankan Secara Lokal".
+          - Automatically generate shields.io badges for the detected tech stack.
+          - The "Getting Started" section must use the correct, detected installation and run commands.
+
+      2.  **IF the prompt is specific** (e.g., "explain the API"):
+          Answer the specific question in a detailed, structured Markdown format, using the project context to inform your answer.
+
+      [USER PROMPT]
       "${prompt}"
 
-      == INSTRUKSI AKHIR ==
-      - Jawablah permintaan pengguna di atas dengan sebaik-baiknya menggunakan konteks yang telah diberikan.
-      - Format seluruh jawaban Anda HANYA dalam bentuk Markdown yang terstruktur dengan baik.
-      - Jangan pernah menyertakan kalimat pembuka atau penutup seperti "Tentu, ini hasilnya" atau "Semoga membantu". Langsung berikan jawaban dalam format Markdown.
+      [FINAL INSTRUCTION]
+      Your entire output must be in Markdown format. Do NOT include any introductory text like "Sure, here is the README...". Start directly with the Markdown content.
     `;
 
     const result = await model.generateContent(detailedPrompt);
