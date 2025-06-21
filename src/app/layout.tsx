@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     "ai readme generator, github readme generator, markdown generator, create readme.md, automatic readme, github profile readme, professional readme",
 
   icons: {
-    icon: "/favicon.ico",
+    icon: "/file.svg",
   },
 
   openGraph: {
