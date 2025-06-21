@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import CopyButton from "./CopyButton";
+import WelcomeGuide from "./WelcomeGuides";
 import {
   FileText,
   Eye,
@@ -149,8 +150,8 @@ export default function MarkdownEditor() {
 
   return (
     <div className="flex flex-col h-screen bg-white dark:bg-gray-900">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+      <WelcomeGuide />
+      <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-4 p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center gap-3">
           <FileText className="h-6 w-6 text-blue-600" />
           <h1 className="text-xl font-bold text-gray-900 dark:text-white">
@@ -175,7 +176,6 @@ export default function MarkdownEditor() {
       </div>
 
       <div className="flex md:flex-row flex-col items-center justify-between gap-4 p-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-        {/* Grup Kiri: Tombol Formatting */}
         <div className="flex flex-wrap justify-center md:justify-start items-center gap-1">
           <button
             onClick={() => handleInsertMarkdown("## ", "", "Heading")}
@@ -258,7 +258,6 @@ export default function MarkdownEditor() {
         </div>
       </div>
 
-      {/* Mobile tabs */}
       <div className="md:hidden flex border-b border-gray-200 dark:border-gray-700">
         <button
           onClick={() => setActiveTab("edit")}
