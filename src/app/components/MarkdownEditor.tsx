@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown";
 import CopyButton from "./CopyButton";
 import WelcomeGuide from "./WelcomeGuides";
 import { ThemeSwitcher } from "./ThemeSwitcher";
+import ConfirmModal from "./ConfirmModal";
 import {
   FileText,
   Eye,
@@ -52,6 +53,7 @@ export default function MarkdownEditor() {
   const [aiPrompt, setAiPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isClearConfirmOpen, setIsClearConfirmOpen] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem("markdown-content");
@@ -103,10 +105,13 @@ export default function MarkdownEditor() {
   };
 
   const handleClearAll = () => {
-    if (confirm("Are you sure you want to clear all content?")) {
-      setMarkdown("");
-      localStorage.removeItem("markdown-content");
-    }
+    setIsClearConfirmOpen(true);
+  };
+
+  const executeClear = () => {
+    setMarkdown("");
+    localStorage.removeItem("markdown-content");
+    setIsClearConfirmOpen(false);
   };
 
   const handleResetDemo = () => {
@@ -153,6 +158,18 @@ export default function MarkdownEditor() {
   return (
     <div className="flex flex-col h-screen">
       <WelcomeGuide />
+
+      <ConfirmModal
+        isOpen={isClearConfirmOpen}
+        onClose={() => setIsClearConfirmOpen(false)}
+        onConfirm={executeClear}
+        title="Hapus Semua Konten?"
+      >
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          Aksi ini tidak dapat diurungkan. Seluruh tulisan Anda di editor akan
+          hilang permanen. Anda yakin ingin melanjutkan?
+        </p>
+      </ConfirmModal>
 
       <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-4 p-4 border-b dark:border-zinc-800">
         <div className="flex items-center gap-3">
