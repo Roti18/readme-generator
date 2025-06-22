@@ -174,7 +174,7 @@ export default function MarkdownEditor() {
       <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-4 p-4 border-b dark:border-zinc-800">
         <div className="flex items-center gap-3">
           <FileText className="h-6 w-6 text-blue-600" />
-          <h1 className="text-xl font-bold">Markdown Generator</h1>
+          <h1 className="text-xl font-bold">Readme Generator</h1>
         </div>
         <div className="flex items-center gap-3">
           <CopyButton text={markdown} />
