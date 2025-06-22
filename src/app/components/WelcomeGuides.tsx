@@ -52,7 +52,7 @@ export default function WelcomeGuide() {
                     as="h3"
                     className="mt-4 text-2xl font-bold leading-6 text-gray-900 dark:text-white"
                   >
-                    Selamat Datang di Markdown Generator!
+                    Selamat Datang di Readme Generator!
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-gray-600 dark:text-gray-400">
