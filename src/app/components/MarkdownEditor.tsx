@@ -182,13 +182,13 @@ export default function MarkdownEditor() {
             onClick={handleResetDemo}
             className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 rounded-lg transition-colors"
           >
-            Reset Demo
+            Reset
           </button>
           <button
             onClick={handleClearAll}
             className="px-3 py-2 text-sm font-medium bg-red-100 dark:bg-red-900/40 hover:bg-red-200 dark:hover:bg-red-900/60 text-red-600 dark:text-red-400 rounded-lg transition-colors"
           >
-            Clear All
+            Clear
           </button>
           <div className="border-l h-6 dark:border-zinc-700"></div>
           <ThemeSwitcher />
