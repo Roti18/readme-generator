@@ -5,18 +5,19 @@
 Readme Generator — Editor markdown dengan live preview.
 
 ## ✨ Fitur Utama
-- **Live Preview:**  Edit markdown secara real-time dan lihat hasilnya secara langsung.
+
+- **Live Preview:** Edit markdown secara real-time dan lihat hasilnya secara langsung.
 - **Pengalaman Pengguna yang Intuitif:** Antarmuka yang sederhana dan mudah digunakan untuk semua level pengguna.
-- **Dukungan Fitur Markdown Lengkap:**  Mendukung semua fitur markdown standar, termasuk heading, bold, italic, list, link, dan lain-lain.
+- **Dukungan Fitur Markdown Lengkap:** Mendukung semua fitur markdown standar, termasuk heading, bold, italic, list, link, dan lain-lain.
 - **(Tambahkan fitur lain jika ada)**
 
-
 ## 💻 Teknologi yang Digunakan
+
 - **Frontend:** Next.js, React, Tailwind CSS, TypeScript
 - **Styling:** Tailwind CSS
 
-
 ## 📂 Struktur Proyek
+
 ```
 /
 ├── .gitignore
@@ -34,6 +35,7 @@ Readme Generator — Editor markdown dengan live preview.
 ```
 
 ## 🛠️ Cara Menjalankan Secara Lokal
+
 1. **Clone repository ini:**
    ```bash
    git clone https://github.com/Roti18/readme-generator

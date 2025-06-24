@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
 import CopyButton from "./CopyButton";
 import WelcomeGuide from "./WelcomeGuides";
 import { ThemeSwitcher } from "./ThemeSwitcher";
@@ -35,7 +37,7 @@ This is a **live markdown editor** that allows you to write and preview markdown
 ### Example Code Block
 \`\`\`javascript
 function greet(name) {
-  return \`Hello, \${name}!\`;
+  return \`Hello, \${name}!\`;
 }
 
 console.log(greet('World'));
@@ -332,7 +334,12 @@ export default function MarkdownEditor() {
           <div className="flex-1 overflow-auto p-4 bg-transparent">
             {markdown.trim() ? (
               <div className="markdown-content">
-                <ReactMarkdown>{markdown}</ReactMarkdown>
+                <ReactMarkdown
+                  rehypePlugins={[rehypeRaw]}
+                  remarkPlugins={[remarkGfm]}
+                >
+                  {markdown}
+                </ReactMarkdown>
               </div>
             ) : (
               <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
