@@ -4,7 +4,7 @@ import {
   GenerateContentResult,
 } from "@google/generative-ai";
 
-const MODEL_NAME = process.env.GEMINI_MODEL_NAME || "gemini-1.5-flash";
+const MODEL_NAME = process.env.GEMINI_MODEL_NAME || "gemini-2.5-flash";
 const API_KEY = process.env.GEMINI_API_KEY;
 
 if (!API_KEY) {
